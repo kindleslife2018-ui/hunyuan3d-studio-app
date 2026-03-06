@@ -1,0 +1,85 @@
+/* ── Hunyuan 3D Studio — Global Styles ─────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Unbounded:wght@300;400;500;700;900&display=swap');
+
+:root {
+  --bg:        #06080d;
+  --bg1:       #0a0e16;
+  --bg2:       #0f1520;
+  --bg3:       #141c2b;
+  --bg4:       #1a2438;
+
+  --border:    rgba(255,255,255,0.06);
+  --border2:   rgba(255,255,255,0.1);
+
+  --c-cyan:    #00ffe0;
+  --c-blue:    #4d9fff;
+  --c-purple:  #a855f7;
+  --c-pink:    #f472b6;
+  --c-green:   #22d3a0;
+  --c-yellow:  #fbbf24;
+  --c-red:     #f87171;
+
+  --text:      #e2e8f0;
+  --text2:     #64748b;
+  --text3:     #2d3f5a;
+
+  --font-display: 'Unbounded', sans-serif;
+  --font-mono:    'Space Mono', monospace;
+
+  --radius:    10px;
+  --radius-lg: 16px;
+  --shadow:    0 4px 24px rgba(0,0,0,0.6);
+  --shadow-lg: 0 8px 48px rgba(0,0,0,0.8);
+
+  --glow-cyan:   0 0 20px rgba(0,255,224,0.2);
+  --glow-purple: 0 0 20px rgba(168,85,247,0.2);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #app {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  overflow: hidden;
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--bg4); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border2); }
+
+/* Selection */
+::selection { background: rgba(0,255,224,0.15); color: var(--c-cyan); }
+
+/* ── Typography ── */
+h1, h2, h3, h4 { font-family: var(--font-display); }
+
+/* ── Utilities ── */
+.mono { font-family: var(--font-mono); }
+.display { font-family: var(--font-display); }
+.truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+
+/* ── Animations ── */
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+@keyframes slideUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+@keyframes glow-pulse {
+  0%,100% { box-shadow: 0 0 0px rgba(0,255,224,0); }
+  50% { box-shadow: 0 0 30px rgba(0,255,224,0.3); }
+}
+
+.spin { animation: spin 1s linear infinite; display: inline-block; }
+.pulse { animation: pulse 2s ease-in-out infinite; }
+.slide-up { animation: slideUp 0.35s cubic-bezier(0.16,1,0.3,1) both; }
+.fade-in { animation: fadeIn 0.3s ease both; }
