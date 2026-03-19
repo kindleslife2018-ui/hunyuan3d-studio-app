@@ -265,7 +265,7 @@ async function submitUV() {
     emit('job-submitted', {
       ...data,
       type: 'UV UNFOLD',
-      queryAction: 'QueryHunyuanTo3DProJob',
+      queryAction: 'DescribeHunyuanTo3DUVJob',
       inputLabel: uvUrl.value.split('/').pop(),
       chips: [uvType.value, 'UV Unfold'],
     });
@@ -314,7 +314,7 @@ async function submitParts() {
     emit('job-submitted', {
       ...data,
       type: 'PART SPLIT',
-      queryAction: 'QueryHunyuanTo3DProJob',
+      queryAction: 'QueryHunyuan3DPartJob',
       inputLabel: partsUrl.value.split('/').pop(),
       chips: ['FBX', 'Part Split'],
     });
