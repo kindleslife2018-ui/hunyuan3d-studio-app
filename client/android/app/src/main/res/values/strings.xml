@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Hunyuan 3D Studio</string>
+    <string name="title_activity_main">Hunyuan 3D Studio</string>
+    <string name="package_name">com.hunyuan.studio</string>
+    <string name="custom_url_scheme">com.hunyuan.studio</string>
+</resources>
