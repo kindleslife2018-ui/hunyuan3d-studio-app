@@ -171,6 +171,19 @@
     <div class="toggles-row">
       <div
         class="toggle-item"
+        v-if="inputMode === 'image' || inputMode === 'url'"
+      >
+        <span class="toggle-label">Auto Remove Background</span>
+        <button
+          class="toggle-btn"
+          :class="{ on: config.autoRemoveBackground }"
+          @click="config.autoRemoveBackground = !config.autoRemoveBackground"
+        >
+          <span class="toggle-knob"></span>
+        </button>
+      </div>
+      <div
+        class="toggle-item"
         v-if="!(config.mode === 'pro' && config.generateType === 'Geometry')"
       >
         <span class="toggle-label">PBR Materials</span>
@@ -214,6 +227,7 @@
 import { ref, computed, reactive } from 'vue';
 import ImageDropzone from './ImageDropzone.vue';
 import { submitGenerate, fileToBase64 } from '../composables/useApi.js';
+import { removeBackground } from '@imgly/background-removal';
 
 const emit = defineEmits(['job-submitted']);
 
@@ -248,6 +262,7 @@ const config = reactive({
   enablePBR: false,
   enableGeometry: false,
   polygonType: 'triangle',
+  autoRemoveBackground: true,
 });
 
 const canSubmit = computed(() => {
@@ -279,12 +294,50 @@ async function submit() {
     let inputPreview = null;
     let inputLabel = '';
 
-    if (inputMode.value === 'image' && imageFile.value) {
-      payload.imageBase64 = await fileToBase64(imageFile.value);
-      inputPreview = URL.createObjectURL(imageFile.value);
-      inputLabel = imageFile.value.name;
-    } else if (inputMode.value === 'url') {
-      payload.imageUrl = imageUrl.value.trim();
+    let finalImageFile = imageFile.value;
+    let finalImageUrl = imageUrl.value.trim();
+
+    // Auto Remove Background processing
+    if (config.autoRemoveBackground && (inputMode.value === 'image' || inputMode.value === 'url')) {
+      isLoading.value = true;
+      submitError.value = '';
+      try {
+        let imageSource = null;
+        if (inputMode.value === 'image' && finalImageFile) {
+          imageSource = finalImageFile;
+        } else if (inputMode.value === 'url' && finalImageUrl) {
+          imageSource = finalImageUrl;
+        }
+
+        if (imageSource) {
+           // We need a way to let the user know what's happening
+           // It's a bit of a hack since we don't have a dedicated status text
+           // but we can at least log it or update a loading string if we had one.
+           // For now, it will just show "SUBMITTING..." longer.
+           const blob = await removeBackground(imageSource, {
+             publicPath: 'https://unpkg.com/@imgly/background-removal-data@1.4.3/dist/'
+           });
+           // Convert blob back to File object to reuse existing logic
+           finalImageFile = new File([blob], "removed-bg.png", { type: "image/png" });
+           // If it was URL, we switch logic to use base64 of the new file instead
+           if (inputMode.value === 'url') {
+              finalImageUrl = ''; // clear url so it uses base64 logic
+           }
+        }
+      } catch (err) {
+        console.error("Background removal failed:", err);
+        submitError.value = "Background removal failed: " + err.message;
+        isLoading.value = false;
+        return;
+      }
+    }
+
+    if ((inputMode.value === 'image' || (inputMode.value === 'url' && config.autoRemoveBackground)) && finalImageFile) {
+      payload.imageBase64 = await fileToBase64(finalImageFile);
+      inputPreview = URL.createObjectURL(finalImageFile);
+      inputLabel = finalImageFile.name || "removed-bg.png";
+    } else if (inputMode.value === 'url' && finalImageUrl) {
+      payload.imageUrl = finalImageUrl;
       inputLabel = payload.imageUrl;
     } else {
       payload.prompt = prompt.value.trim();
