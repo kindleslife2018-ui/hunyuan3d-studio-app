@@ -314,7 +314,9 @@ async function submit() {
            // It's a bit of a hack since we don't have a dedicated status text
            // but we can at least log it or update a loading string if we had one.
            // For now, it will just show "SUBMITTING..." longer.
-           const blob = await removeBackground(imageSource);
+           const blob = await removeBackground(imageSource, {
+             publicPath: 'https://unpkg.com/@imgly/background-removal-data@1.4.3/dist/'
+           });
            // Convert blob back to File object to reuse existing logic
            finalImageFile = new File([blob], "removed-bg.png", { type: "image/png" });
            // If it was URL, we switch logic to use base64 of the new file instead

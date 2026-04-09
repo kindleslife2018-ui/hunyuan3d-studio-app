@@ -14,7 +14,7 @@
     "@capacitor/android": "^8.3.0",
     "@capacitor/cli": "^8.3.0",
     "@capacitor/core": "^8.3.0",
-    "@imgly/background-removal": "^1.7.0",
+    "@imgly/background-removal": "^1.4.3",
     "axios": "^1.6.0",
     "vue": "^3.4.0"
   },
